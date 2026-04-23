@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>111 Unofficial Cybersecurity Consulting Gigs Per Category</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Outfit', 'Avenir', sans-serif;
+      background: linear-gradient(180deg, #0a0e17 0%, #111827 100%);
+      min-height: 100vh;
+      color: #e2e8f0;
+    }
+    .header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      padding: 48px 24px;
+      text-align: center;
+      border-bottom: 3px solid #00ff88;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(0,255,136,0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .header-label {
+      font-size: 12px;
+      letter-spacing: 4px;
+      color: #00ff88;
+      margin-bottom: 14px;
+      font-weight: 600;
+      position: relative;
+    }
+    .header h1 {
+      font-size: 34px;
+      font-weight: 700;
+      color: white;
+      margin: 0 0 16px 0;
+      line-height: 1.2;
+      position: relative;
+    }
+    .header p {
+      font-size: 16px;
+      color: #94a3b8;
+      max-width: 640px;
+      margin: 0 auto;
+      line-height: 1.6;
+      position: relative;
+    }
+    .total-badge {
+      margin-top: 22px;
+      display: inline-block;
+      background: rgba(0,255,136,0.1);
+      padding: 10px 24px;
+      border-radius: 24px;
+      border: 1px solid rgba(0,255,136,0.4);
+      color: #00ff88;
+      font-weight: 600;
+      font-size: 14px;
+      position: relative;
+    }
+    .api-status-bar {
+      display: none;
+      background: #1a1a2e;
+      border-bottom: 1px solid #334155;
+      padding: 10px 24px;
+      text-align: center;
+      position: relative;
+      z-index: 99;
+    }
+    .api-status-bar.visible { display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .api-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .api-status-pill.active { background: rgba(0,255,136,0.12); color: #00ff88; border: 1px solid rgba(0,255,136,0.3); }
+    .api-status-pill.disabled { background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+    .api-status-pill .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .api-status-pill.active .dot { background: #00ff88; box-shadow: 0 0 6px #00ff88; }
+    .api-status-pill.disabled .dot { background: #fbbf24; box-shadow: 0 0 6px #fbbf24; }
+    .reset-btn {
+      padding: 6px 16px;
+      border-radius: 20px;
+      border: 1px solid #475569;
+      background: #334155;
+      color: #cbd5e1;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .reset-btn:hover { background: #475569; color: white; }
+    .tabs {
+      background: #0f172a;
+      padding: 16px;
+      border-bottom: 1px solid #1e293b;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      overflow-x: auto;
+    }
+    .tabs-inner {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .tab-btn {
+      padding: 10px 18px;
+      border-radius: 24px;
+      border: 1px solid #1e293b;
+      background: #1e293b;
+      color: #94a3b8;
+      font-weight: 500;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.25s;
+      white-space: nowrap;
+      font-family: inherit;
+    }
+    .tab-btn:hover { background: #334155; color: #e2e8f0; border-color: #475569; }
+    .tab-btn.active {
+      background: rgba(0,255,136,0.15);
+      color: #00ff88;
+      border-color: rgba(0,255,136,0.4);
+    }
+    .content { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+    .category-section { margin-bottom: 48px; display: none; }
+    .category-section.active { display: block; }
+    .category-header {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 24px;
+      border: 1px solid #334155;
+      border-left: 4px solid #00ff88;
+    }
+    .category-title-row { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .category-emoji { font-size: 32px; }
+    .category-name { margin: 0; color: #f1f5f9; font-size: 24px; }
+    .category-badge {
+      background: #00ff88;
+      color: #0a0e17;
+      padding: 3px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .category-desc { color: #94a3b8; margin: 0 0 20px 0; line-height: 1.6; }
+    .prompts-box {
+      background: rgba(0,255,136,0.04);
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid rgba(0,255,136,0.15);
+    }
+    .prompts-title { color: #00ff88; margin: 0 0 12px 0; font-size: 13px; letter-spacing: 1.5px; font-weight: 600; }
+    .prompts-list { margin: 0; padding-left: 20px; color: #cbd5e1; line-height: 1.9; }
+    .prompts-list li { margin-bottom: 6px; font-size: 13px; }
+    .brands-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 10px;
+    }
+    .brand-card {
+      background: #1e293b;
+      padding: 14px 16px;
+      border-radius: 10px;
+      border: 1px solid #334155;
+      transition: all 0.25s;
+      position: relative;
+      cursor: pointer;
+    }
+    .brand-card:hover {
+      border-color: rgba(0,255,136,0.5);
+      box-shadow: 0 0 20px rgba(0,255,136,0.1);
+      transform: translateY(-2px);
+      background: #253349;
+    }
+    .brand-card.disabled-card { cursor: default; }
+    .brand-card.disabled-card:hover { border-color: #334155; box-shadow: none; transform: none; background: #1e293b; }
+    .brand-card::after {
+      content: '⚡ Click for details';
+      position: absolute;
+      bottom: 4px;
+      right: 8px;
+      font-size: 10px;
+      color: #475569;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .brand-card:hover::after { opacity: 1; }
+    .brand-card.disabled-card::after { content: ''; }
+    .brand-number { position: absolute; top: 8px; right: 10px; font-size: 11px; color: #475569; font-weight: 600; font-family: monospace; }
+    .brand-name { font-size: 13px; font-weight: 500; color: #e2e8f0; display: block; padding-right: 28px; line-height: 1.4; }
+    .master-prompt {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border-radius: 16px;
+      padding: 32px;
+      margin-top: 48px;
+      border: 1px solid #334155;
+    }
+    .master-prompt h3 { color: #00ff88; margin: 0 0 16px 0; font-size: 20px; }
+    .master-prompt > p { color: #94a3b8; margin-bottom: 24px; line-height: 1.6; }
+    .prompt-box {
+      background: rgba(0,255,136,0.04);
+      border-radius: 12px;
+      padding: 24px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.9;
+      border: 1px solid rgba(0,255,136,0.2);
+      color: #cbd5e1;
+    }
+    .prompt-box strong { color: #00ff88; }
+    .prompt-box ol { margin: 0; padding-left: 20px; }
+    .why-section {
+      background: #1e293b;
+      border-radius: 16px;
+      padding: 32px;
+      margin-top: 24px;
+      border: 1px solid #334155;
+    }
+    .why-section h3 { color: #f1f5f9; margin: 0 0 20px 0; }
+    .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .why-card { padding: 20px; background: rgba(0,255,136,0.04); border-radius: 12px; border: 1px solid #334155; }
+    .why-card h4 { color: #00ff88; margin: 0 0 8px 0; font-size: 15px; }
+    .why-card p { color: #94a3b8; margin: 0; font-size: 14px; line-height: 1.6; }
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      backdrop-filter: blur(6px);
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: #1e293b;
+      border-radius: 20px;
+      max-width: 720px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(0,255,136,0.08);
+      border: 1px solid #334155;
+    }
+    .modal-header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      padding: 24px 28px;
+      border-radius: 20px 20px 0 0;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid #334155;
+    }
+    .modal-header h2 { color: white; margin: 0 0 8px 0; font-size: 22px; padding-right: 40px; }
+    .modal-header p { color: #00ff88; margin: 0; font-size: 13px; font-weight: 500; }
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .modal-close:hover { background: rgba(255,255,255,0.2); transform: scale(1.1); }
+    .modal-content { padding: 28px; }
+    .niche-explanation { background: rgba(0,255,136,0.05); border-radius: 12px; padding: 20px; margin-bottom: 24px; border-left: 4px solid #00ff88; }
+    .niche-explanation h3 { color: #00ff88; margin: 0 0 12px 0; font-size: 15px; }
+    .niche-explanation p { color: #cbd5e1; margin: 0; line-height: 1.7; font-size: 14px; }
+    .community-ideas h3 { color: #f1f5f9; margin: 0 0 16px 0; font-size: 18px; }
+    .idea-card {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 14px;
+      transition: all 0.2s;
+    }
+    .idea-card:hover { border-color: rgba(0,255,136,0.3); box-shadow: 0 0 16px rgba(0,255,136,0.06); }
+    .idea-card h4 { color: #f1f5f9; margin: 0 0 8px 0; font-size: 15px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .idea-card .model-tag { background: #00ff88; color: #0a0e17; padding: 2px 10px; border-radius: 10px; font-size: 10px; font-weight: 700; letter-spacing: 0.3px; }
+    .idea-card p { color: #94a3b8; margin: 0; font-size: 13px; line-height: 1.6; }
+    .loading { text-align: center; padding: 60px 20px; }
+    .loading-spinner { width: 48px; height: 48px; border: 3px solid #334155; border-top-color: #00ff88; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 20px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading p { color: #64748b; font-size: 13px; }
+    .error-state { text-align: center; padding: 40px 20px; color: #94a3b8; }
+    .error-state button { margin-top: 16px; padding: 12px 24px; background: rgba(0,255,136,0.15); color: #00ff88; border: 1px solid rgba(0,255,136,0.3); border-radius: 8px; cursor: pointer; font-family: inherit; font-weight: 500; }
+    .error-state button:hover { background: rgba(0,255,136,0.25); }
+    .setup-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      backdrop-filter: blur(8px);
+    }
+    .setup-overlay.active { display: flex; }
+    .setup-modal {
+      background: #1e293b;
+      border-radius: 20px;
+      max-width: 520px;
+      width: 100%;
+      border: 1px solid #334155;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 60px rgba(0,255,136,0.1);
+      overflow: hidden;
+    }
+    .setup-header { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 28px; text-align: center; border-bottom: 1px solid #334155; }
+    .setup-header .lock-icon { font-size: 40px; margin-bottom: 12px; }
+    .setup-header h2 { color: white; margin: 0 0 8px 0; font-size: 20px; }
+    .setup-header p { color: #94a3b8; margin: 0; font-size: 14px; line-height: 1.5; }
+    .setup-body { padding: 28px; }
+    .setup-option { background: #0f172a; border: 1px solid #334155; border-radius: 14px; padding: 22px; margin-bottom: 14px; cursor: pointer; transition: all 0.25s; }
+    .setup-option:hover { border-color: rgba(0,255,136,0.4); box-shadow: 0 0 20px rgba(0,255,136,0.08); }
+    .setup-option:last-child { margin-bottom: 0; }
+    .setup-option-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+    .setup-option-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .setup-option-icon.green { background: rgba(0,255,136,0.15); }
+    .setup-option-icon.amber { background: rgba(251,191,36,0.15); }
+    .setup-option h3 { color: #f1f5f9; margin: 0; font-size: 16px; }
+    .setup-option p { color: #94a3b8; margin: 0; font-size: 13px; line-height: 1.5; padding-left: 52px; }
+    .api-key-form { display: none; margin-top: 18px; padding: 20px; background: #0f172a; border-radius: 12px; border: 1px solid rgba(0,255,136,0.2); }
+    .api-key-form.visible { display: block; }
+    .api-key-form label { display: block; color: #94a3b8; font-size: 13px; margin-bottom: 8px; }
+    .api-key-input-row { display: flex; gap: 8px; }
+    .api-key-form input { flex: 1; padding: 12px 16px; background: #1e293b; border: 1px solid #475569; border-radius: 8px; color: #e2e8f0; font-family: 'Courier New', monospace; font-size: 13px; outline: none; transition: border-color 0.2s; }
+    .api-key-form input:focus { border-color: #00ff88; }
+    .api-key-form input::placeholder { color: #475569; }
+    .api-key-submit { padding: 12px 20px; background: #00ff88; color: #0a0e17; border: none; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; font-family: inherit; white-space: nowrap; transition: all 0.2s; }
+    .api-key-submit:hover { background: #33ffaa; }
+    .api-key-note { margin-top: 10px; font-size: 11px; color: #64748b; line-height: 1.5; }
+    .api-key-error { margin-top: 10px; font-size: 12px; color: #f87171; display: none; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-label">CYBERSECURITY CONSULTING PLAYBOOK</div>
+    <h1>111 Unofficial Cybersecurity Consulting Gigs</h1>
+    <p>High-demand consulting niches with built-in market recognition. Click any gig for AI-generated engagement details, pricing models, and client acquisition strategies.</p>
+    <div class="total-badge">🔒 1,221 Total Gigs Across 11 Specializations</div>
+  </div>
+
+  <div class="api-status-bar" id="apiStatusBar">
+    <div class="api-status-pill" id="apiStatusPill">
+      <span class="dot"></span>
+      <span id="apiStatusText">Loading...</span>
+    </div>
+    <button class="reset-btn" id="resetBtn" onclick="resetConfig()">⟲ Change API Settings</button>
+  </div>
+
+  <div class="tabs">
+    <div class="tabs-inner">
+      <button class="tab-btn active" onclick="showCategory('all', this)">All (1,221)</button>
+      <button class="tab-btn" onclick="showCategory('offensive', this)">🗡️ Offensive</button>
+      <button class="tab-btn" onclick="showCategory('defensive', this)">🛡️ Defensive</button>
+      <button class="tab-btn" onclick="showCategory('grc', this)">📋 GRC</button>
+      <button class="tab-btn" onclick="showCategory('cloud', this)">☁️ Cloud</button>
+      <button class="tab-btn" onclick="showCategory('appdev', this)">💻 AppSec & Dev</button>
+      <button class="tab-btn" onclick="showCategory('identity', this)">🔑 Identity</button>
+      <button class="tab-btn" onclick="showCategory('incident', this)">🚨 Incident & Forensics</button>
+      <button class="tab-btn" onclick="showCategory('advisory', this)">📊 Advisory & vCISO</button>
+      <button class="tab-btn" onclick="showCategory('awareness', this)">🧠 Security Awareness</button>
+      <button class="tab-btn" onclick="showCategory('email', this)">📧 Email Security</button>
+      <button class="tab-btn" onclick="showCategory('emerging', this)">🔮 Emerging & Niche</button>
+    </div>
+  </div>
+
+  <div class="content" id="categoriesContainer"></div>
+
+  <!-- Gig Detail Modal -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modal-title">Loading...</h2>
+        <p id="modal-category">Consulting Gig Details</p>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-content" id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Setup Modal -->
+  <div class="setup-overlay" id="setupModal">
+    <div class="setup-modal">
+      <div class="setup-header">
+        <div class="lock-icon">🔐</div>
+        <h2>AI-Powered Gig Details</h2>
+        <p>This page can generate engagement models, pricing, and strategies for each gig using the Anthropic API. How would you like to proceed?</p>
+      </div>
+      <div class="setup-body">
+        <div class="setup-option" onclick="showApiKeyForm()">
+          <div class="setup-option-header">
+            <div class="setup-option-icon green">🔑</div>
+            <h3>Enter Anthropic API Key</h3>
+          </div>
+          <p>Enable AI-generated engagement details for every gig. Requires an Anthropic API key with Claude access.</p>
+        </div>
+        <div class="api-key-form" id="apiKeyForm">
+          <label>Paste your Anthropic API key below:</label>
+          <div class="api-key-input-row">
+            <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." autocomplete="off" />
+            <button class="api-key-submit" onclick="submitApiKey()">Connect</button>
+          </div>
+          <div class="api-key-note">Your key is stored only in this browser session's memory and is never saved to disk or sent anywhere except the Anthropic API.</div>
+          <div class="api-key-error" id="apiKeyError"></div>
+        </div>
+        <div class="setup-option" onclick="disableApi()">
+          <div class="setup-option-header">
+            <div class="setup-option-icon amber">📖</div>
+            <h3>Browse Without AI Details</h3>
+          </div>
+          <p>Use the catalog as a static reference guide. You can always re-enable AI details later from the status bar.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── State ──
+    let apiMode = 'unknown';
+    let userApiKey = null;
+    const ideaCache = {};
+
+    // ── Category Definitions ──
+    const categoryMeta = {
+      offensive: { name: 'Offensive Security', emoji: '🗡️', desc: 'Penetration testing, red teaming, vulnerability research, and adversary simulation engagements', prompts: ['When was your last penetration test and what scope did it cover?','Do you have an internal red team, or do you rely entirely on third-party assessments?','What compliance frameworks require you to perform offensive testing?','Have you ever experienced a breach that a pen test should have caught?','What\'s your appetite for adversary simulation vs. standard vulnerability scanning?'] },
+      defensive: { name: 'Defensive Security & SOC', emoji: '🛡️', desc: 'Threat detection, SIEM/SOAR, endpoint protection, network defense, and security operations center consulting', prompts: ['What\'s your current mean time to detect (MTTD) and mean time to respond (MTTR)?','Are you running an in-house SOC, outsourced MDR, or hybrid model?','What\'s your biggest blind spot in detection coverage today?','How much alert fatigue is your security team experiencing?','Do you have threat hunting capabilities or is it purely reactive?'] },
+      grc: { name: 'GRC & Compliance', emoji: '📋', desc: 'Governance, risk management, compliance frameworks, audits, privacy regulations, and policy development', prompts: ['What compliance frameworks are you currently subject to or pursuing?','When is your next audit, and what gaps have you already identified?','How mature is your risk management program on a 1–5 scale?','Do you have a dedicated GRC platform or are you managing with spreadsheets?','What\'s driving your compliance initiative — regulation, customer demand, or board pressure?'] },
+      cloud: { name: 'Cloud Security', emoji: '☁️', desc: 'Multi-cloud architecture, container security, infrastructure-as-code security, CSPM, and cloud-native protection', prompts: ['What cloud providers are you using and what\'s your multi-cloud strategy?','How are you managing IAM across cloud environments today?','Are you running containers or Kubernetes in production, and how do you secure them?','What visibility do you have into cloud misconfigurations and drift?','Is your infrastructure deployed as code, and have you integrated security scanning into your CI/CD?'] },
+      appdev: { name: 'Application Security & DevSecOps', emoji: '💻', desc: 'Secure SDLC, code review, SAST/DAST, API security, DevSecOps pipeline integration, and software supply chain', prompts: ['Where does security currently fit in your software development lifecycle?','Are developers trained on secure coding, and how do you measure that?','What automated security scanning (SAST, DAST, SCA) do you have in your pipeline?','How do you manage third-party and open-source dependencies?','Have you experienced any vulnerabilities in production that your pipeline should have caught?'] },
+      identity: { name: 'Identity & Access Management', emoji: '🔑', desc: 'IAM strategy, Zero Trust architecture, PAM, SSO/MFA, identity governance, and directory services', prompts: ['How are you managing user identities across on-prem and cloud today?','What\'s your current MFA coverage — is it 100% of users and all access methods?','Do you have privileged access management (PAM) in place for admin and service accounts?','How far along are you on your Zero Trust journey?','What does your access review and certification process look like?'] },
+      incident: { name: 'Incident Response & Forensics', emoji: '🚨', desc: 'IR planning, breach response, digital forensics, threat intelligence, ransomware recovery, and business continuity', prompts: ['Do you have a documented and tested incident response plan?','When was the last time you ran a tabletop exercise or IR drill?','What\'s your forensic readiness — do you preserve logs and evidence properly?','Do you have a retainer with an IR firm, or would you be starting from scratch in a breach?','What\'s your ransomware response policy — pay, don\'t pay, or undecided?'] },
+      advisory: { name: 'Advisory & vCISO Services', emoji: '📊', desc: 'Fractional CISO, security program development, board reporting, M&A due diligence, and strategic advisory', prompts: ['Do you currently have a CISO or security leadership, or is that a gap?','How does your board currently receive security risk updates?','What\'s your security budget as a percentage of IT spend, and is it adequate?','Are you planning any M&A activity that would require security due diligence?','What does security program maturity look like in your 3-year roadmap?'] },
+      awareness: { name: 'Security Awareness & Training', emoji: '🧠', desc: 'Human risk management, security culture programs, phishing simulations, role-based training, and behavior analytics', prompts: ['What does your current security awareness program look like and how do you measure its effectiveness?','What percentage of your employees click on phishing simulations?','Do you have role-based security training for developers, executives, and high-risk departments?','How do you handle repeat offenders who consistently fail security tests?','Is security awareness treated as a compliance checkbox or a culture initiative?'] },
+      email: { name: 'Email Security', emoji: '📧', desc: 'Email gateway protection, anti-phishing, DMARC/DKIM/SPF, BEC prevention, email encryption, and messaging security', prompts: ['What email platform are you running and what native security features have you enabled?','Do you have DMARC, DKIM, and SPF fully configured and enforced?','How are you protecting against business email compromise (BEC) and impersonation attacks?','What\'s your process when a user reports a suspicious email?','Do you have email encryption and DLP policies for sensitive communications?'] },
+      emerging: { name: 'Emerging & Niche Specializations', emoji: '🔮', desc: 'AI/ML security, IoT/OT, automotive, healthcare, quantum readiness, and bleeding-edge cybersecurity domains', prompts: ['Are you deploying AI/ML models and have you assessed their security and adversarial risks?','Do you have OT/ICS environments that need segmentation or monitoring?','What industry-specific regulations create unique security requirements for you?','How are you thinking about post-quantum cryptography readiness?','What emerging technology adoption is outpacing your security team\'s ability to protect it?'] },
+    };
+
+    const gigsData = {
+      offensive: ['External Network Pen Test','Internal Network Pen Test','Web Application Pen Test','Mobile Application Pen Test','API Penetration Testing','Wireless Penetration Testing','Cloud Penetration Testing','Red Team Engagement','Purple Team Exercise','Physical Penetration Testing','Social Engineering Assessment','Phishing Simulation Campaign','Vishing Assessment','Smishing Campaign Testing','Pretexting Engagement','Tailgating/Piggybacking Test','USB Drop Test','Password Audit & Cracking','Active Directory Attack Simulation','Kerberoasting Assessment','OSINT Reconnaissance','Dark Web Exposure Scan','Attack Surface Mapping','External Threat Landscape Report','Assumed Breach Testing','Adversary Simulation (APT)','Ransomware Simulation','Supply Chain Attack Simulation','Lateral Movement Assessment','Privilege Escalation Testing','C2 Infrastructure Testing','Data Exfiltration Testing','Firewall Rule Review','IDS/IPS Evasion Testing','EDR Bypass Assessment','Email Security Gateway Testing','WAF Bypass Testing','Segmentation Validation Testing','VPN Security Assessment','Remote Access Testing','Thick Client Testing','IoT Device Pen Test','Embedded Systems Testing','SCADA/ICS Pen Test','ATM Security Testing','POS System Pen Test','Mainframe Penetration Testing','SAP Security Assessment','Oracle Database Security Test','Blockchain/Smart Contract Audit','Vulnerability Assessment (Quarterly)','Vulnerability Prioritization Consulting','Exploit Development Consulting','Custom Payload Development','Security Tool Validation','Bug Bounty Program Setup','Bug Bounty Triage Consulting','Coordinated Disclosure Management','Attack Path Analysis','Crown Jewels Assessment','Breach Scenario Modeling','Threat Modeling Workshop','STRIDE/DREAD Analysis','MITRE ATT&CK Mapping','Kill Chain Analysis','Blue Team Readiness Assessment','Detection Gap Analysis','SOC Stress Test','Tabletop Exercise (Offensive)','War Game Facilitation','Capture the Flag Event Design','Security Awareness Red Team','Executive Social Engineering','Board-Level Phishing Demo','Source Code Review (Offensive)','Binary Analysis','Reverse Engineering Engagement','Malware Development (Controlled)','Zero-Day Research Retainer','Exploit Proof-of-Concept Dev','Hardware Hacking Assessment','RFID/NFC Security Testing','Bluetooth Security Assessment','Zigbee/Z-Wave Testing','Vehicle Security Testing','Drone Security Assessment','Satellite Communication Testing','5G Infrastructure Testing','VoIP Security Assessment','SIP Protocol Testing','Kubernetes Cluster Pen Test','Container Escape Testing','Serverless Function Testing','CI/CD Pipeline Attack Simulation','Infrastructure-as-Code Exploitation','DNS Security Assessment','BGP Hijack Simulation','SSL/TLS Configuration Audit','Certificate Management Review','Cryptographic Implementation Review','Key Management Assessment','OT Network Pen Test','Building Management System Test','Medical Device Security Testing','Aviation System Security Testing','Maritime System Testing','Rail System Security Testing','Gaming Platform Security Test','Streaming Service Pen Test','Election System Security Test'],
+      defensive: ['SIEM Implementation','SIEM Tuning & Optimization','SIEM Migration Consulting','Log Management Architecture','Log Source Onboarding','SOAR Platform Implementation','SOAR Playbook Development','SOAR Integration Consulting','SOC Design & Build','SOC Maturity Assessment','SOC Process Optimization','SOC Staffing & Training Plan','MDR Vendor Selection','MDR Service Evaluation','XDR Strategy & Implementation','EDR Deployment & Tuning','EDR Vendor Evaluation','Endpoint Hardening','Endpoint Baseline Configuration','Mobile Device Security (MDM)','Network Detection & Response (NDR)','Network Traffic Analysis Setup','Network Segmentation Design','Micro-Segmentation Implementation','East-West Traffic Monitoring','Firewall Architecture Review','Next-Gen Firewall Deployment','Firewall Rule Optimization','Firewall Change Management','Network Access Control (NAC)','DLP Strategy & Implementation','DLP Policy Tuning','Data Classification Program','Data Flow Mapping','Email Security Architecture','Email Authentication (DMARC/DKIM/SPF)','Anti-Phishing Solution Deployment','Secure Email Gateway Tuning','Browser Isolation Strategy','Web Proxy Configuration','DNS Security Implementation','DNS Sinkholing Setup','Threat Intelligence Program','Threat Intel Platform Selection','Threat Feed Aggregation','Threat Intel Sharing (ISAC)','Adversary Profiling','Threat Landscape Briefings','Threat Hunting Program Design','Threat Hunt Execution','Hypothesis-Driven Hunt Ops','IOC Sweep & Investigation','YARA Rule Development','Sigma Rule Development','Snort/Suricata Rule Tuning','Detection Engineering Program','Detection-as-Code Implementation','Detection Coverage Analysis','MITRE ATT&CK Coverage Mapping','Purple Team Program Design','Vulnerability Management Program','VM Tool Selection & Deployment','Vulnerability Scanning (Recurring)','Patch Management Consulting','Risk-Based Vuln Prioritization','Asset Inventory & Discovery','Shadow IT Discovery','Attack Surface Management','External Attack Surface Monitoring','Brand Protection Monitoring','Dark Web Monitoring Service','Credential Leak Monitoring','Security Awareness Training Program','Phishing Awareness Campaign','Security Champion Program','Security Culture Assessment','Tabletop Exercise (Defensive)','Incident Response Drill','Backup & Recovery Validation','Disaster Recovery Testing','Business Continuity Planning','Ransomware Readiness Assessment','Ransomware Defense Architecture','Anti-Ransomware Tabletop','Deception Technology Deployment','Honeypot/Honeynet Design','Canary Token Implementation','Zero Trust Network Design','Zero Trust Pilot Program','ZTNA Vendor Selection','Secure Access Service Edge (SASE)','SD-WAN Security Integration','Remote Worker Security Program','VPN Replacement Strategy','Wireless Security Assessment','Rogue Device Detection','Certificate Lifecycle Management','PKI Design & Implementation','Hardware Security Module (HSM)','Key Management System','Encryption Strategy Consulting','Data-at-Rest Encryption','Data-in-Transit Security','Database Activity Monitoring','Privileged Session Recording','File Integrity Monitoring','Configuration Management (CMDB)','Security Baseline Development','CIS Benchmark Implementation','OS Hardening Guide','Container Security Platform','Kubernetes Security Posture','Supply Chain Security Monitoring'],
+      grc: ['SOC 2 Type I Preparation','SOC 2 Type II Readiness','SOC 2 Gap Analysis','SOC 2 Evidence Collection Automation','SOC 2 Continuous Monitoring','ISO 27001 Implementation','ISO 27001 Gap Analysis','ISO 27001 Internal Audit','ISO 27001 Certification Support','ISO 27701 Privacy Extension','PCI DSS Assessment','PCI DSS Gap Remediation','PCI DSS SAQ Assistance','PCI PIN Security Assessment','PCI Card Production Audit','HIPAA Security Rule Assessment','HIPAA Risk Assessment','HIPAA Breach Notification Planning','HIPAA BAA Review','HITRUST CSF Assessment','GDPR Compliance Assessment','GDPR Data Mapping','GDPR DPIA Consulting','GDPR DPO-as-a-Service','GDPR Cross-Border Transfer Review','CCPA/CPRA Compliance','State Privacy Law Assessment','Privacy Program Development','Privacy Impact Assessment','Privacy-by-Design Consulting','NIST CSF Assessment','NIST CSF Gap Analysis','NIST CSF Implementation Roadmap','NIST 800-53 Control Mapping','NIST 800-171 Compliance','CMMC Level 1 Readiness','CMMC Level 2 Preparation','CMMC Gap Assessment','FedRAMP Authorization Support','FedRAMP Continuous Monitoring','FISMA Compliance Assessment','NERC CIP Compliance','FFIEC Cybersecurity Assessment','GLBA Compliance Review','NY DFS 500 Compliance','SEC Cybersecurity Disclosure Review','DORA Compliance (EU Financial)','NIS2 Directive Readiness','UK Cyber Essentials Consulting','CPS 234 Compliance (Australia)','Third-Party Risk Management Program','Vendor Security Assessment','Vendor Risk Questionnaire Design','Vendor Due Diligence','Supply Chain Risk Assessment','Fourth-Party Risk Analysis','Vendor Tiering & Classification','Continuous Vendor Monitoring','SIG/CAIQ Questionnaire Response','Security Questionnaire Automation','Risk Assessment (Quantitative)','Risk Assessment (Qualitative)','FAIR Risk Analysis','Cyber Risk Quantification','Risk Register Development','Risk Appetite Statement','Risk Treatment Planning','Enterprise Risk Management Integration','Cyber Insurance Assessment','Cyber Insurance Application Support','Security Policy Development','Security Policy Review & Update','Acceptable Use Policy','Data Classification Policy','Incident Response Policy','Remote Work Security Policy','BYOD Policy Development','AI/ML Governance Policy','Third-Party Access Policy','Data Retention Policy','Security Standards Development','Security Procedure Writing','Control Framework Mapping','Cross-Framework Compliance Mapping','Compliance Dashboard Development','GRC Platform Selection','GRC Platform Implementation','GRC Tool Migration','Board Reporting Framework','Cybersecurity Metrics Program','KPI/KRI Development','Security Maturity Assessment','Capability Maturity Model','Security Roadmap Development','Security Budget Justification','Regulatory Change Management','Compliance Calendar Management','Audit Preparation Consulting','Internal Audit Program','External Audit Liaison','Evidence Management System','Continuous Compliance Monitoring','Compliance-as-Code Implementation','Policy Exception Management','Security Governance Structure','Security Committee Charter','Data Governance Framework','Records Management Security','Intellectual Property Protection','Trade Secret Security Program','Export Control Compliance','Sanctions Screening Integration','Ethics & Compliance Integration'],
+      cloud: ['AWS Security Architecture Review','AWS Well-Architected Security Pillar','AWS Config Rules Implementation','AWS GuardDuty Optimization','AWS Security Hub Setup','Azure Security Architecture Review','Azure Sentinel Implementation','Azure Security Center Optimization','Azure Policy Configuration','Azure AD Security Hardening','GCP Security Architecture Review','GCP Security Command Center','GCP Organization Policy Setup','GCP VPC Service Controls','GCP IAM Best Practices','Multi-Cloud Security Strategy','Multi-Cloud Identity Federation','Cloud Security Posture Management','CSPM Tool Selection','CSPM Custom Policy Development','Cloud Workload Protection (CWPP)','Cloud Access Security Broker (CASB)','Cloud-Native Application Protection','SaaS Security Posture Management','SaaS Configuration Review','Microsoft 365 Security Hardening','Google Workspace Security','Salesforce Security Assessment','ServiceNow Security Review','SaaS App Inventory & Risk','Container Security Strategy','Docker Security Hardening','Kubernetes Security Assessment','K8s Network Policy Design','K8s RBAC Configuration','K8s Admission Controller Setup','K8s Secrets Management','Container Image Scanning','Container Runtime Protection','Service Mesh Security','Serverless Security Assessment','Lambda/Functions Security','Serverless IAM Optimization','Event-Driven Architecture Security','API Gateway Security','Infrastructure-as-Code Security','Terraform Security Scanning','CloudFormation Security Review','Pulumi Security Assessment','IaC Policy-as-Code','CI/CD Pipeline Security (Cloud)','GitOps Security Review','Artifact Registry Security','Container Registry Hardening','Image Signing & Verification','Cloud IAM Strategy','Cloud IAM Audit','Cross-Account Access Review','Service Account Security','Workload Identity Federation','Cloud Secrets Management','Vault Implementation','Key Management Service Config','Certificate Management (Cloud)','Cloud Encryption Strategy','Cloud Network Security Design','VPC Architecture Review','Cloud Firewall Configuration','Cloud WAF Implementation','DDoS Protection Strategy','Cloud Logging Architecture','CloudTrail/Activity Log Review','Cloud SIEM Integration','Cloud Forensic Readiness','Cloud Evidence Preservation','Cloud Data Security','Cloud DLP Implementation','Cloud Storage Security','Database Security (Cloud)','Data Residency Compliance','Cloud Compliance Assessment','Cloud Audit Trail Design','Cloud Governance Framework','FinOps Security Alignment','Cloud Cost & Security Optimization','Tagging Strategy for Security','Cloud Disaster Recovery Security','Cloud Backup Security','Multi-Region Security Design','Cloud Migration Security Planning','Lift-and-Shift Security Assessment','Cloud-Native Transformation Security','Hybrid Cloud Security Architecture','On-Prem to Cloud Security Bridge','Edge Computing Security','CDN Security Configuration','Cloud Penetration Testing','Cloud Red Team Exercise','Cloud Misconfiguration Remediation','Cloud Security Automation','Cloud Security Training Program','Cloud Shared Responsibility Mapping','Cloud Security Maturity Assessment','Cloud Security Roadmap','Cloud Vendor Security Comparison','Cloud Exit Strategy Security','Data Portability Security','Cloud Security Operations Center','Cloud Incident Response Plan','Cloud Threat Modeling','Cloud Compliance Automation','Cloud Security Architecture as Code','Confidential Computing Strategy','Cloud HSM Implementation','Cloud Security Reference Architecture'],
+      appdev: ['Secure SDLC Implementation','Secure SDLC Maturity Assessment','OWASP Top 10 Assessment','OWASP ASVS Verification','OWASP SAMM Assessment','Threat Modeling (Application)','Architecture Risk Analysis','Design Review (Security)','Secure Design Patterns Consulting','Microservices Security Architecture','SAST Tool Selection & Deployment','SAST Pipeline Integration','SAST Results Triage & Tuning','Custom SAST Rule Development','Code Quality & Security Correlation','DAST Implementation','DAST Scan Configuration','Authenticated DAST Scanning','DAST Results Management','DAST/SAST Correlation Analysis','IAST Deployment','RASP Implementation','Runtime Protection Strategy','Real-Time Attack Detection (App)','Application Firewall Tuning','SCA Tool Implementation','Open Source Risk Assessment','License Compliance Scanning','SBOM Generation & Management','Software Supply Chain Security','Dependency Confusion Prevention','Typosquatting Detection','Package Registry Security','Build Pipeline Integrity','SLSA Framework Implementation','Source Code Review (Defensive)','Secure Code Review Process','Code Review Checklist Development','Peer Review Security Training','Automated Code Review Setup','API Security Assessment','API Gateway Security Design','API Authentication Architecture','OAuth/OIDC Implementation Review','API Rate Limiting & Abuse Prevention','GraphQL Security Assessment','gRPC Security Review','WebSocket Security Testing','REST API Security Best Practices','API Versioning Security','DevSecOps Pipeline Design','Security Gate Implementation','Pipeline-as-Code Security','Secrets Detection in Code','Pre-Commit Hook Security','Security Unit Test Development','Security Integration Testing','Chaos Engineering (Security)','Canary Deployment Security','Feature Flag Security Review','Container Image Security Pipeline','Infrastructure-as-Code Scanning','Policy-as-Code Implementation','Compliance-as-Code for Developers','GitOps Security Workflow','Secure Coding Training','Language-Specific Security Training','Security Champions Program','Developer Security Certification','Security Hackathon Facilitation','Web Application Firewall Tuning','WAF Rule Development','Bot Management Strategy','Client-Side Security Assessment','Content Security Policy Design','Mobile App Security Testing','iOS Security Assessment','Android Security Assessment','Mobile Backend Security','Mobile App Hardening','Authentication System Design','MFA Implementation (Application)','Session Management Review','Password Policy & Storage Audit','Biometric Authentication Design','Single Sign-On Implementation','SAML Federation Review','JWT Security Assessment','Token Management Architecture','Credential Rotation Automation','Input Validation Framework','Output Encoding Strategy','File Upload Security','Deserialization Security','XML Security Assessment','Database Security (Application)','SQL Injection Prevention','ORM Security Review','Stored Procedure Audit','Data Access Layer Security','Cryptography Implementation Review','Encryption Integration','Hashing Strategy Review','Digital Signature Implementation','Certificate Pinning','Error Handling & Logging Security','Security Logging Framework','Application Audit Trail','Sensitive Data Exposure Prevention','PII Detection & Protection','Compliance Testing Automation','Security Regression Testing','Penetration Test Remediation Support','Vulnerability Remediation Coaching','Security Debt Reduction Program'],
+      identity: ['IAM Strategy & Roadmap','IAM Maturity Assessment','IAM Program Governance','IAM Vendor Selection','IAM Architecture Design','Active Directory Security Assessment','Active Directory Hardening','AD Tier Model Implementation','AD Attack Path Analysis','AD Forest/Trust Review','Azure AD Security Configuration','Azure AD Conditional Access Design','Azure AD PIM Configuration','Azure AD B2B/B2C Security','Hybrid Identity Security','Okta Implementation & Security','Okta Security Best Practices','Ping Identity Configuration','OneLogin Security Review','IdP Migration Planning','Multi-Factor Authentication Strategy','MFA Rollout & Adoption','Passwordless Strategy','FIDO2/WebAuthn Implementation','Passkey Migration Consulting','Privileged Access Management (PAM)','PAM Tool Selection','PAM Deployment & Configuration','Privileged Session Management','Just-in-Time Access Implementation','Service Account Management','Service Account Discovery','Service Account Rotation','Machine Identity Management','Non-Human Identity Security','Identity Governance & Administration','Access Certification Campaign','Role-Based Access Control Design','Attribute-Based Access Control','Policy-Based Access Control','Role Mining & Engineering','Role Explosion Remediation','Entitlement Management','Access Request Workflow Design','Birthright Access Provisioning','Joiner-Mover-Leaver Automation','Identity Lifecycle Management','Orphaned Account Remediation','Dormant Account Cleanup','Account Reconciliation','Single Sign-On Architecture','SSO Implementation','Federation Design','SAML Configuration','OIDC/OAuth Architecture','Zero Trust Identity Pillar','Zero Trust Access Policy Design','Continuous Authentication','Risk-Based Authentication','Adaptive Access Controls','Identity Threat Detection','Identity Attack Surface Reduction','Credential Stuffing Prevention','Account Takeover Prevention','Identity Fraud Detection','Customer Identity (CIAM) Strategy','CIAM Platform Selection','CIAM Security Assessment','Progressive Profiling Security','Consent Management','Directory Services Consolidation','LDAP Security Hardening','Directory Migration','Cloud Directory Strategy','Hybrid Directory Architecture','API Access Management','API Key Governance','API Token Lifecycle','OAuth Scope Management','API Gateway IAM Integration','IoT Identity Management','Device Identity Provisioning','X.509 Certificate-Based Auth','IoT Credential Management','Device Trust Framework','Workforce Identity Security','Remote Worker Access','Contractor Access Management','Third-Party Identity Risk','Vendor Identity Lifecycle','Cloud IAM Governance','Multi-Cloud IAM Strategy','Cloud Entitlement Management','Cloud Permission Boundaries','Cross-Cloud Identity Federation','Secrets Management Program','Vault Deployment & Operations','Secret Rotation Automation','Certificate Lifecycle Automation','PKI Architecture Consulting','Identity Analytics & Reporting','IAM Metrics Dashboard','Access Risk Scoring','Segregation of Duties (SoD)','Toxic Combination Analysis','PAM Audit & Compliance','IAM Audit Preparation','Identity Compliance Reporting','Regulatory IAM Requirements','NIST 800-63 Digital Identity','IAM Incident Response','Identity Breach Investigation','Compromised Credential Response','Emergency Access Procedures','Identity DR/BC Planning'],
+      incident: ['Incident Response Plan Development','IR Plan Review & Update','IR Playbook Development','IR Playbook Library','Ransomware Response Playbook','Business Email Compromise Playbook','Insider Threat Playbook','DDoS Response Playbook','Data Breach Response Playbook','Cloud Incident Playbook','Tabletop Exercise Design','Tabletop Exercise Facilitation','Executive Tabletop Exercise','Technical IR Drill','Full-Scale IR Simulation','IR Team Training Program','First Responder Training','IR Certification Prep Training','IR Skills Assessment','IR Cross-Training Program','IR Retainer Agreement Setup','IR Retainer Management','Emergency Hotline Setup','On-Call IR Coverage','IR SLA Development','Breach Response Management','Breach Notification Consulting','Regulatory Breach Reporting','Customer Notification Strategy','PR/Communications Coordination','Legal Hold & Preservation','Evidence Collection & Chain of Custody','Forensic Image Acquisition','Memory Forensics','Disk Forensics','Network Forensics','Log Forensics','Email Forensics','Mobile Device Forensics','Cloud Forensics','Malware Analysis','Static Malware Analysis','Dynamic Malware Analysis','Reverse Engineering (IR)','Malware Family Classification','Threat Actor Attribution','Campaign Tracking','Adversary Infrastructure Mapping','TTPs Documentation','Intelligence Report Development','Ransomware Investigation','Ransomware Negotiation Support','Ransomware Decryption Assessment','Crypto Transaction Tracing','Ransom Payment Due Diligence','Business Email Compromise Investigation','Wire Fraud Investigation','Account Takeover Investigation','Credential Compromise Scope','Lateral Movement Analysis','Insider Threat Investigation','Employee Monitoring (Forensic)','Data Theft Investigation','IP Theft Investigation','Whistleblower Investigation Support','eDiscovery Support','Litigation Hold Management','Expert Witness Services','Forensic Report Writing','Court Testimony Preparation','Data Breach Root Cause Analysis','Post-Incident Review Facilitation','Lessons Learned Documentation','IR Metrics & Reporting','MTTR/MTTD Improvement Consulting','Threat Intelligence (IR-Focused)','IOC Development & Sharing','Threat Feed Integration (IR)','Real-Time Threat Briefings','Flash Alert Services','Crisis Management Framework','Crisis Communication Plan','Cyber Crisis Simulation','Executive Crisis Training','Media Response Preparation','Business Continuity Planning','BCP/DR Gap Analysis','Recovery Time Objective Design','Business Impact Analysis','Continuity Testing & Validation','SOC Incident Escalation Design','Incident Triage Optimization','Incident Categorization Framework','Incident Severity Matrix','War Room Procedures','Forensic Lab Setup Consulting','Forensic Tool Selection','Forensic Workstation Configuration','Evidence Storage Architecture','Chain of Custody System','Compromise Assessment','Threat Actor Hunt (Post-Breach)','Persistent Access Detection','Environment Hardening (Post-IR)','Reinfection Prevention','Cyber Insurance Claim Support','Insurance Evidence Package','Loss Quantification','Coverage Gap Analysis','Premium Reduction Consulting','Third-Party Breach Response','Vendor Breach Impact Assessment','Supply Chain Incident Response','Customer Data Exposure Scoping','Regulatory Inquiry Response'],
+      advisory: ['vCISO Retainer (Full Program)','vCISO Retainer (Part-Time)','Interim CISO Placement','CISO Coaching & Mentoring','CISO Transition Support','Security Program Assessment','Security Program Design','Security Maturity Model Development','Security Roadmap (3-Year)','Security Roadmap (Annual)','Board Presentation Development','Board Cyber Risk Briefing','Board Readiness Assessment','Cyber Risk Reporting Framework','Executive Dashboard Design','Security Budget Development','Security ROI Analysis','Security Investment Justification','Tool Rationalization Assessment','Build-vs-Buy Analysis','Security Team Structure Design','Security Org Assessment','Security Hiring Strategy','Job Description Development','Interview Framework Creation','Security Culture Assessment','Security Awareness Maturity','Culture Change Program','Executive Buy-In Strategy','Security Communication Plan','M&A Cybersecurity Due Diligence','Pre-Acquisition Security Assessment','Post-Merger Security Integration','Divestiture Security Planning','Carve-Out Security Architecture','Startup Security Program (Seed)','Startup Security (Series A)','Startup Security (Series B+)','Startup Compliance Accelerator','Investor Security Due Diligence','SMB Security Program','SMB Security Quick Start','SMB Tool Stack Recommendation','SMB Security Budget Planning','SMB Managed Security Selection','Enterprise Security Strategy','Enterprise Security Transformation','Global Security Program Design','Multi-Entity Security Governance','Shared Services Security Model','Industry-Specific Advisory (Healthcare)','Industry-Specific Advisory (Financial)','Industry-Specific Advisory (Manufacturing)','Industry-Specific Advisory (Retail)','Industry-Specific Advisory (Education)','Cybersecurity Strategic Planning','Security Vision & Mission','Security Charter Development','Security Operating Model','Security Service Catalog','Vendor Strategy & Selection','Technology Evaluation Framework','Proof-of-Concept Management','Vendor Negotiation Support','Contract Security Requirements','Outsourcing Strategy (Security)','MSSP Selection & Management','MDR Evaluation','Managed SOC Transition','Co-Managed Security Model','Cyber Risk Committee Formation','Risk Committee Charter','Risk Appetite Framework','Risk Tolerance Definition','Risk Communication Strategy','Regulatory Strategy Consulting','Regulatory Landscape Analysis','Regulatory Preparedness Review','Multi-Jurisdiction Compliance','Regulatory Relationship Management','Peer Benchmarking Analysis','Industry Comparison Report','Security Metrics Benchmarking','Maturity Benchmarking','Spending Benchmarking','Cybersecurity Insurance Advisory','Cyber Insurance Optimization','Policy Coverage Review','Claims Preparedness','Risk Transfer Strategy','Security Awareness Program Design','Phishing Program Development','Training Content Development','Executive Security Briefing Program','Security Newsletter/Communication','Digital Transformation Security','Cloud Migration Security Advisory','AI Adoption Security Advisory','IoT Security Strategy','OT/IT Convergence Advisory','Incident Preparedness Assessment','Crisis Readiness Evaluation','Tabletop Exercise Program','IR Maturity Advisory','Breach Readiness Score','Security Architecture Review','Architecture Principles Development','Reference Architecture Creation','Technology Debt Assessment','Legacy System Risk Assessment','Third-Party Risk Advisory','Vendor Portfolio Risk Assessment','Concentration Risk Analysis','Supply Chain Security Strategy','Ecosystem Risk Management'],
+      awareness: ['Security Awareness Program Design','Security Awareness Maturity Assessment','Security Awareness Strategy Development','Security Awareness Roadmap','Awareness Program ROI Analysis','Phishing Simulation Program','Phishing Simulation Vendor Selection','Phishing Campaign Design & Execution','Spear-Phishing Simulation','Executive Phishing Simulation','Vishing Simulation Program','Smishing Simulation Campaign','QR Code Phishing (Quishing) Simulation','USB Drop Simulation','Social Engineering Awareness Program','Security Culture Assessment','Security Culture Transformation','Culture Metrics & Measurement','Security Culture Benchmarking','Culture Change Roadmap','Role-Based Training (Developers)','Role-Based Training (Executives)','Role-Based Training (Finance)','Role-Based Training (HR)','Role-Based Training (IT Admins)','Role-Based Training (Customer Service)','Role-Based Training (Legal)','Role-Based Training (Healthcare Staff)','Role-Based Training (Remote Workers)','Role-Based Training (New Hires)','Security Awareness Content Development','Custom Training Module Creation','Video-Based Training Production','Interactive eLearning Development','Microlearning Series Design','Gamification Strategy','Security Awareness Gamification Platform','Capture the Flag (Awareness Edition)','Security Escape Room Design','Awareness Competition & Leaderboards','Learning Management System (LMS) Selection','LMS Implementation for Security','Training Content Library Curation','SCORM Module Development','Training Completion Tracking System','Human Risk Management Program','Human Risk Scoring Model','Behavioral Analytics for Awareness','Risk-Based Training Targeting','Repeat Offender Program Design','Insider Threat Awareness Program','Insider Threat Indicators Training','Privileged User Awareness Training','Whistleblower Awareness Campaign','Data Handling Awareness','Security Champion Network Design','Security Ambassador Program','Departmental Security Liaison Training','Peer-to-Peer Security Mentoring','Security Advocate Certification','Compliance Awareness Training (HIPAA)','Compliance Awareness Training (PCI)','Compliance Awareness Training (GDPR)','Compliance Awareness Training (SOX)','Compliance Awareness Training (CMMC)','Executive Security Briefing Program','Board-Level Cyber Awareness','C-Suite Security Workshop','Executive Threat Landscape Briefing','Executive Social Media Safety','Physical Security Awareness','Tailgating Prevention Training','Clean Desk Policy Training','Visitor Management Awareness','Secure Printing Awareness','Remote Work Security Training','Home Network Security Guide','Public Wi-Fi Safety Training','BYOD Security Awareness','Travel Security Briefing','Password & Authentication Training','MFA Adoption Campaign','Passkey Awareness Initiative','Password Manager Rollout Training','Credential Hygiene Program','Data Privacy Awareness Program','PII Handling Training','Data Classification Training','Privacy Rights Awareness','Cross-Border Data Awareness','Social Media Security Training','Personal Brand Protection','Corporate Social Media Policy','Online Footprint Awareness','Digital Identity Protection','Incident Reporting Training','Suspicious Activity Reporting','Breach Response Role Training','Evidence Preservation Awareness','Whistleblower Hotline Training','AI & Deepfake Awareness','Generative AI Safety Training','Deepfake Recognition Training','AI Tool Usage Policy Training','Shadow AI Awareness','Security Awareness Newsletter','Monthly Security Digest','Security Tip of the Week Program','Awareness Poster & Signage Campaign','Security Awareness Day/Week Event','Metrics & Reporting Dashboard','Phishing Click Rate Analytics','Training Completion Reporting','Behavior Change Measurement','Awareness Program Benchmarking','Vendor Evaluation (Awareness Platforms)'],
+      email: ['Email Security Architecture Review','Email Security Strategy Development','Email Security Maturity Assessment','Email Platform Migration Security','Email Security Vendor Evaluation','Secure Email Gateway (SEG) Implementation','SEG Tuning & Optimization','SEG Vendor Selection','SEG Policy Configuration','SEG Bypass Prevention','DMARC Implementation','DMARC Monitoring & Enforcement','DMARC Reporting Analysis','DMARC Aggregate Report Consulting','DMARC Forensic Report Analysis','DKIM Configuration','DKIM Key Rotation Strategy','DKIM Alignment Consulting','DKIM Multi-Domain Setup','DKIM Troubleshooting','SPF Record Optimization','SPF Record Audit','SPF Flattening Strategy','SPF Permerror Remediation','SPF Multi-Domain Management','BIMI Implementation','BIMI Certificate Management','BIMI Brand Indicator Design','MTA-STS Implementation','TLS-RPT Configuration','Business Email Compromise (BEC) Prevention','BEC Detection Rule Development','CEO Fraud Protection Strategy','Invoice Fraud Prevention','Payment Redirect Detection','Vendor Email Compromise Prevention','Lookalike Domain Detection','Cousin Domain Monitoring','Display Name Spoofing Protection','Reply-To Attack Prevention','Anti-Phishing Solution Deployment','Phishing Detection Rule Tuning','URL Rewriting & Sandboxing','Attachment Sandboxing Configuration','Zero-Hour Phishing Detection','AI-Powered Phishing Detection','Computer Vision Phishing Detection','Brand Impersonation Protection','Credential Harvesting Prevention','Phishing Landing Page Takedown','Email Encryption Implementation','S/MIME Deployment','PGP/GPG Implementation','TLS Enforcement Strategy','End-to-End Email Encryption','Email DLP Strategy','Email DLP Rule Development','Sensitive Data Detection (Email)','Email Content Inspection Policies','Outbound Email Scanning','Microsoft 365 Email Security','Exchange Online Protection Tuning','Microsoft Defender for Office 365','M365 Anti-Phishing Policies','M365 Safe Links & Safe Attachments','M365 Quarantine Management','M365 Email Authentication Setup','M365 Tenant Security Hardening','M365 Mail Flow Rule Audit','M365 Admin Role Security','Google Workspace Email Security','Gmail Security Configuration','Google Workspace DLP for Email','Google Workspace Phishing Protection','Google Vault Configuration','Email Archiving & Retention','Email Archive Security Audit','Legal Hold for Email','eDiscovery Email Configuration','Email Retention Policy Development','Email Threat Intelligence','Email IOC Monitoring','Malicious Attachment Analysis','Email Header Analysis Consulting','Email Threat Hunting','Email Incident Response Playbook','Email Compromise Investigation','Email Forensics Analysis','Business Email Compromise IR','Email-Based Ransomware Response','Email Account Recovery Procedures','Internal Email Security','Lateral Phishing Detection','Internal Spoofing Prevention','Shared Mailbox Security','Distribution List Security Audit','Email Auto-Forwarding Controls','Email Delegation Security','Service Account Email Hardening','Mail Flow Architecture Review','Email Routing Security','Mailing List Security Assessment','User Reporting & Triage','Phish Button/Report Plugin Deployment','Reported Email Triage Workflow','SOC Email Alert Playbook','User Feedback Loop Design','Email Security Awareness Integration','Email Security KPI Dashboard','Email Threat Metrics Reporting','Email Security Compliance Audit','Email Security Policy Development','Email Security Training for IT Staff'],
+      emerging: ['AI/ML Model Security Assessment','AI Red Teaming','LLM Security Evaluation','Prompt Injection Testing','AI Governance Framework','AI Bias & Fairness Audit','AI Data Poisoning Assessment','Deepfake Detection Strategy','AI-Powered Threat Detection Consulting','Generative AI Security Policy','OT/ICS Security Assessment','OT Network Architecture Review','OT/IT Convergence Security','SCADA Security Hardening','Industrial Protocol Security','PLC Security Assessment','DCS Security Review','OT Monitoring Implementation','OT Incident Response Planning','Purdue Model Implementation','IoT Security Assessment','IoT Device Hardening','IoT Firmware Analysis','IoT Network Security','Smart Building Security','Connected Vehicle Security','Fleet Telematics Security','Autonomous Vehicle Security','V2X Communication Security','Automotive Cybersecurity (ISO 21434)','Medical Device Security (Pre-Market)','Medical Device Security (Post-Market)','Healthcare IoMT Security','Clinical Network Segmentation','HL7/FHIR Security Assessment','Quantum Readiness Assessment','Post-Quantum Cryptography Migration','Crypto Agility Planning','Quantum Key Distribution Consulting','Harvest Now Decrypt Later Defense','Space & Satellite Security','Ground Station Security','Satellite Communication Security','Space System Cybersecurity','GPS/GNSS Security','Drone/UAS Security Assessment','Counter-Drone Security','Drone Fleet Security','Airspace Cybersecurity','UAV Communication Security','5G Security Assessment','5G Network Slicing Security','Private 5G Security','5G Edge Security','Telecom Security Consulting','Blockchain Security Audit','Smart Contract Auditing','DeFi Protocol Security','Crypto Wallet Security','Web3 Application Security','Digital Twin Security','Metaverse Security Consulting','VR/AR Security Assessment','Extended Reality Policy','Virtual World Identity Security','Privacy Engineering','Privacy-Enhancing Technologies','Differential Privacy Implementation','Homomorphic Encryption Consulting','Secure Multi-Party Computation','Cyber-Physical Systems Security','Robotics Security Assessment','Industrial Robot Security','Collaborative Robot Safety','Autonomous Systems Security','Maritime Cybersecurity','Port Security Assessment','Vessel Cybersecurity','Maritime Communication Security','Offshore Platform Security','Aviation Cybersecurity','Airport System Security','Avionics Security','Air Traffic System Security','Airline IT Security','Rail Cybersecurity','Signaling System Security','Train Control System Security','Station Security Assessment','Rail Communication Security','Energy Sector Security','Smart Grid Security','Renewable Energy System Security','EV Charging Infrastructure Security','Nuclear Facility Cybersecurity','Water/Wastewater Security','SCADA Water System Assessment','Smart Water Meter Security','Treatment Plant Security','Distribution System Security','Election Security Consulting','Voting System Assessment','Election Infrastructure Review','Campaign Cybersecurity','Disinformation Defense','Supply Chain Firmware Security','Hardware Trojan Detection','Chip-Level Security Assessment','PCB Security Analysis','Counterfeit Component Detection','Cyber Wargaming','Tabletop Design (Nation-State)','Geopolitical Cyber Risk','Cyber Threat Landscape (Country)','Sanctions & Cyber Risk Alignment'],
+    };
+
+    // ── Build Category HTML ──
+    function buildCategories() {
+      const container = document.getElementById('categoriesContainer');
+      const catOrder = ['offensive','defensive','grc','cloud','appdev','identity','incident','advisory','awareness','email','emerging'];
+      let html = '';
+      for (const cat of catOrder) {
+        const m = categoryMeta[cat];
+        html += `<div class="category-section" id="${cat}">
+          <div class="category-header">
+            <div class="category-title-row">
+              <span class="category-emoji">${m.emoji}</span>
+              <div>
+                <h2 class="category-name">${m.name}</h2>
+                <span class="category-badge">111 GIGS</span>
+              </div>
+            </div>
+            <p class="category-desc">${m.desc}</p>
+            <div class="prompts-box">
+              <h4 class="prompts-title">🎯 CLIENT DISCOVERY QUESTIONS</h4>
+              <ol class="prompts-list">${m.prompts.map(p => `<li>${p}</li>`).join('')}</ol>
+            </div>
+          </div>
+          <div class="brands-grid" id="${cat}-brands"></div>
+        </div>`;
+      }
+      // Master prompt
+      html += `<div class="master-prompt">
+        <h3>🔑 THE MASTER PROMPT: Positioning Your Consulting Gig</h3>
+        <p>Use this prompt to define your unique consulting angle for any gig:</p>
+        <div class="prompt-box">
+          <p><strong>I want to build a cybersecurity consulting practice around [GIG NAME].</strong></p>
+          <p>I'm targeting [INDUSTRY/COMPANY SIZE] clients who need this expertise.</p>
+          <p>Help me define:</p>
+          <ol>
+            <li>What specific pain point does this gig solve that keeps a CISO up at night?</li>
+            <li>What's my deliverable — a report, implementation, retainer, or ongoing service?</li>
+            <li>What certifications or proof of expertise would make me credible?</li>
+            <li>How do I price this — project-based, hourly, retainer, or value-based?</li>
+            <li>What's the ideal first engagement that leads to a long-term relationship?</li>
+          </ol>
+        </div>
+      </div>`;
+      // Why section
+      html += `<div class="why-section">
+        <h3>💡 Why "Unofficial Gigs" Matter in Cybersecurity Consulting</h3>
+        <div class="why-grid">
+          <div class="why-card"><h4>Built-In Demand Signals</h4><p>CISOs already search for "ransomware readiness assessment" and "SOC 2 preparation." You match existing buying intent rather than creating awareness from scratch.</p></div>
+          <div class="why-card"><h4>Instant Credibility Framing</h4><p>When you say "I do Zero Trust Architecture consulting," prospects immediately understand your value. No pitch deck required — the gig name IS the elevator pitch.</p></div>
+          <div class="why-card"><h4>Land-and-Expand Revenue</h4><p>Start with a focused gig like a phishing simulation, deliver results, then expand into security awareness training, policy development, and ongoing advisory. One gig becomes a portfolio.</p></div>
+        </div>
+      </div>`;
+      container.innerHTML = html;
+    }
+
+    // ── Render ──
+    function renderBrands(containerId, brands, category) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+      el.innerHTML = brands.map((b, i) => `
+        <div class="brand-card${apiMode === 'disabled' ? ' disabled-card' : ''}" onclick="handleCardClick('${b.replace(/'/g, "\\'")}', '${category}')">
+          <span class="brand-number">${String(i+1).padStart(3,'0')}</span>
+          <span class="brand-name">${b}</span>
+        </div>
+      `).join('');
+    }
+
+    function showCategory(cat, btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.category-section').forEach(s => s.classList.remove('active'));
+      if (cat === 'all') {
+        document.querySelectorAll('.category-section').forEach(s => s.classList.add('active'));
+      } else {
+        document.getElementById(cat).classList.add('active');
+      }
+    }
+
+    function handleCardClick(gig, category) {
+      if (apiMode === 'disabled' || apiMode === 'detecting') return;
+      openModal(gig, category);
+    }
+
+    function openModal(gig, category) {
+      document.getElementById('modal-title').textContent = gig;
+      document.getElementById('modal-category').textContent = `${categoryMeta[category].emoji} ${categoryMeta[category].name} • Consulting Gig Details`;
+      document.getElementById('modal-body').innerHTML = `<div class="loading"><div class="loading-spinner"></div><p>Generating engagement details, pricing models, and client strategies...</p></div>`;
+      document.getElementById('modal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+      generateIdeas(gig, category);
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    document.getElementById('modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // ── API ──
+    function getApiHeaders() {
+      const h = { "Content-Type": "application/json" };
+      if (apiMode === 'user_key' && userApiKey) {
+        h["x-api-key"] = userApiKey;
+        h["anthropic-version"] = "2023-06-01";
+        h["anthropic-dangerous-direct-browser-access"] = "true";
+      }
+      return h;
+    }
+
+    async function generateIdeas(gig, category) {
+      const key = `${gig}-${category}`;
+      if (ideaCache[key]) { renderIdeas(ideaCache[key]); return; }
+      const prompt = `You are a cybersecurity consulting business advisor. The user wants details on this consulting gig: "${gig}" (Category: ${categoryMeta[category].name}).
+
+Generate:
+1. A 2-3 sentence description of what this consulting gig involves and why clients need it.
+2. Exactly 5 engagement models for delivering this gig, each with a different approach.
+
+For each engagement model include:
+- A descriptive name for the engagement
+- The engagement type (one of: One-Time Assessment, Retainer, Project-Based, Workshop, Managed Service)
+- One sentence on the deliverable and typical pricing range
+
+Respond ONLY in this exact JSON format:
+{
+  "explanation": "string",
+  "ideas": [
+    {"name": "string", "model": "string", "description": "string"},
+    {"name": "string", "model": "string", "description": "string"},
+    {"name": "string", "model": "string", "description": "string"},
+    {"name": "string", "model": "string", "description": "string"},
+    {"name": "string", "model": "string", "description": "string"}
+  ]
+}`;
+      try {
+        const res = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: getApiHeaders(),
+          body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, messages: [{ role: "user", content: prompt }] })
+        });
+        const data = await res.json();
+        const text = data.content.map(i => i.text || "").join("\n");
+        const parsed = JSON.parse(text.replace(/```json|```/g, "").trim());
+        ideaCache[key] = parsed;
+        renderIdeas(parsed);
+      } catch (err) {
+        console.error(err);
+        document.getElementById('modal-body').innerHTML = `<div class="error-state"><p>⚠️ Couldn't generate details right now. Try again.</p><button onclick="generateIdeas('${gig.replace(/'/g, "\\'")}', '${category}')">Retry</button></div>`;
+      }
+    }
+
+    function renderIdeas(data) {
+      document.getElementById('modal-body').innerHTML = `
+        <div class="niche-explanation"><h3>🔍 About This Gig</h3><p>${data.explanation}</p></div>
+        <div class="community-ideas"><h3>⚡ 5 Engagement Models</h3>
+          ${data.ideas.map(i => `<div class="idea-card"><h4>${i.name} <span class="model-tag">${i.model}</span></h4><p>${i.description}</p></div>`).join('')}
+        </div>`;
+    }
+
+    // ── Setup & Environment ──
+    function showSetupModal() { document.getElementById('setupModal').classList.add('active'); document.getElementById('apiKeyForm').classList.remove('visible'); }
+    function closeSetupModal() { document.getElementById('setupModal').classList.remove('active'); }
+    function showApiKeyForm() { document.getElementById('apiKeyForm').classList.add('visible'); document.getElementById('apiKeyInput').focus(); }
+
+    async function submitApiKey() {
+      const input = document.getElementById('apiKeyInput');
+      const errEl = document.getElementById('apiKeyError');
+      const key = input.value.trim();
+      if (!key.startsWith('sk-ant-')) { errEl.style.display = 'block'; errEl.style.color = '#f87171'; errEl.textContent = 'Invalid format. Anthropic keys start with "sk-ant-".'; return; }
+      errEl.style.display = 'block'; errEl.style.color = '#00ff88'; errEl.textContent = 'Validating key...';
+      try {
+        const res = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" },
+          body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 10, messages: [{ role: "user", content: "Say OK" }] })
+        });
+        if (res.ok) { userApiKey = key; apiMode = 'user_key'; closeSetupModal(); updateStatusBar(); updateCardStates(); }
+        else { const d = await res.json().catch(() => ({})); errEl.style.color = '#f87171'; errEl.textContent = d.error?.message || `API returned ${res.status}. Check your key.`; }
+      } catch (e) { errEl.style.color = '#f87171'; errEl.textContent = 'Network error. Could not reach Anthropic API.'; }
+    }
+
+    function disableApi() { apiMode = 'disabled'; closeSetupModal(); updateStatusBar(); updateCardStates(); }
+
+    function resetConfig() {
+      apiMode = 'unknown'; userApiKey = null;
+      Object.keys(ideaCache).forEach(k => delete ideaCache[k]);
+      updateCardStates(); showSetupModal(); updateStatusBar();
+    }
+
+    function updateStatusBar() {
+      const bar = document.getElementById('apiStatusBar');
+      const pill = document.getElementById('apiStatusPill');
+      const text = document.getElementById('apiStatusText');
+      if (apiMode === 'anthropic_hosted') { bar.classList.add('visible'); pill.className = 'api-status-pill active'; text.textContent = 'AI Details Active (Anthropic Hosted)'; }
+      else if (apiMode === 'user_key') { bar.classList.add('visible'); pill.className = 'api-status-pill active'; text.textContent = 'AI Details Active (Your API Key)'; }
+      else if (apiMode === 'disabled') { bar.classList.add('visible'); pill.className = 'api-status-pill disabled'; text.textContent = 'AI Details Disabled — Static Mode'; }
+      else { bar.classList.remove('visible'); }
+    }
+
+    function updateCardStates() {
+      const cards = document.querySelectorAll('.brand-card');
+      if (apiMode === 'disabled') cards.forEach(c => c.classList.add('disabled-card'));
+      else cards.forEach(c => c.classList.remove('disabled-card'));
+    }
+
+    async function detectEnvironment() {
+      apiMode = 'detecting';
+      try {
+        const res = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 10, messages: [{ role: "user", content: "Say OK" }] })
+        });
+        if (res.ok || res.status === 200) { apiMode = 'anthropic_hosted'; updateStatusBar(); updateCardStates(); return; }
+      } catch (e) {}
+      apiMode = 'unknown';
+      showSetupModal();
+    }
+
+    // ── Init ──
+    buildCategories();
+    Object.keys(gigsData).forEach(cat => renderBrands(cat + '-brands', gigsData[cat], cat));
+    document.querySelectorAll('.category-section').forEach(s => s.classList.add('active'));
+    document.addEventListener('DOMContentLoaded', () => {
+      const input = document.getElementById('apiKeyInput');
+      if (input) input.addEventListener('keydown', e => { if (e.key === 'Enter') submitApiKey(); });
+    });
+    detectEnvironment();
+  </script>
+</body>
+</html>
